@@ -11,5 +11,3 @@ char *basename(char *s)
 	for (; i&&s[i-1]!='/'; i--);
 	return s+i;
 }
-
-weak_alias(basename, __xpg_basename);

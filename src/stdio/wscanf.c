@@ -13,4 +13,3 @@ int wscanf(const wchar_t *restrict fmt, ...)
 	return ret;
 }
 
-weak_alias(wscanf,__isoc99_wscanf);

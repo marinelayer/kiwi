@@ -7,17 +7,14 @@ extern "C" {
 
 #include <features.h>
 
-struct utsname {
-	char sysname[65];
-	char nodename[65];
-	char release[65];
-	char version[65];
-	char machine[65];
-#ifdef _GNU_SOURCE
-	char domainname[65];
-#else
-	char __domainname[65];
-#endif
+#define _SYS_NAMELEN    256
+
+struct  utsname {
+        char    sysname[_SYS_NAMELEN];
+        char    nodename[_SYS_NAMELEN];
+        char    release[_SYS_NAMELEN];
+        char    version[_SYS_NAMELEN];
+        char    machine[_SYS_NAMELEN];
 };
 
 int uname (struct utsname *);

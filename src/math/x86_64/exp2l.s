@@ -1,6 +1,5 @@
-.global expm1l
-.type expm1l,@function
-expm1l:
+.global _expm1l
+_expm1l:
 	fldt 8(%rsp)
 	fldl2e
 	fmulp
@@ -27,9 +26,8 @@ expm1l:
 	fsubrp
 	ret
 
-.global exp2l
-.type exp2l,@function
-exp2l:
+.global _exp2l
+_exp2l:
 	fldt 8(%rsp)
 1:	fld %st(0)
 	sub $16,%rsp

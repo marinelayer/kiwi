@@ -1,9 +1,6 @@
 #include "stdio_impl.h"
 #include "libc.h"
 
-static void dummy(FILE *f) { }
-weak_alias(dummy, __unlist_locked_file);
-
 int fclose(FILE *f)
 {
 	int r;
@@ -11,7 +8,9 @@ int fclose(FILE *f)
 	
 	FLOCK(f);
 
+#if 0
 	__unlist_locked_file(f);
+#endif
 
 	if (!(perm = f->flags & F_PERM)) {
 		FILE **head = __ofl_lock();

@@ -7,28 +7,25 @@ extern "C" {
 
 #include <features.h>
 
-#include <bits/poll.h>
+#define POLLIN          0x0001
+#define POLLPRI         0x0002
+#define POLLOUT         0x0004
+#define POLLRDNORM      0x0040
+#define POLLWRNORM      POLLOUT
+#define POLLRDBAND      0x0080
+#define POLLWRBAND      0x0100
+#define POLLEXTEND      0x0200
+#define POLLATTRIB      0x0400
+#define POLLNLINK       0x0800
+#define POLLWRITE       0x1000
+#define POLLERR         0x0008
+#define POLLHUP         0x0010
+#define POLLNVAL        0x0020
 
-#define POLLIN     0x001
-#define POLLPRI    0x002
-#define POLLOUT    0x004
-#define POLLERR    0x008
-#define POLLHUP    0x010
-#define POLLNVAL   0x020
-#define POLLRDNORM 0x040
-#define POLLRDBAND 0x080
-#ifndef POLLWRNORM
-#define POLLWRNORM 0x100
-#define POLLWRBAND 0x200
-#endif
-#ifndef POLLMSG
-#define POLLMSG    0x400
-#define POLLRDHUP  0x2000
-#endif
+typedef unsigned int nfds_t;
 
-typedef unsigned long nfds_t;
-
-struct pollfd {
+struct pollfd
+{
 	int fd;
 	short events;
 	short revents;

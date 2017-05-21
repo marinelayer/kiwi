@@ -9,4 +9,3 @@ void *__memrchr(const void *m, int c, size_t n)
 	return 0;
 }
 
-weak_alias(__memrchr, memrchr);

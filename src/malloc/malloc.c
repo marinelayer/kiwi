@@ -7,16 +7,16 @@
 #include <sys/mman.h>
 #include "libc.h"
 #include "atomic.h"
-#include "pthread_impl.h"
 
 #if defined(__GNUC__) && defined(__PIC__)
 #define inline inline __attribute__((always_inline))
 #endif
 
-void *__mmap(void *, size_t, int, int, int, off_t);
-int __munmap(void *, size_t);
-void *__mremap(void *, size_t, size_t, int, ...);
-int __madvise(void *, size_t, int);
+uint64_t __mmap_base = 0x7fff00000000ULL;
+
+void *mmap(void *, size_t, int, int, int, off_t);
+int munmap(void *, size_t);
+int madvise(void *, size_t, int);
 
 struct chunk {
 	size_t psize, csize;
@@ -60,16 +60,20 @@ static struct {
 
 static inline void lock(volatile int *lk)
 {
+#if 0
 	if (libc.threads_minus_1)
 		while(a_swap(lk, 1)) __wait(lk, lk+1, 1, 1);
+#endif
 }
 
 static inline void unlock(volatile int *lk)
 {
+#if 0
 	if (lk[0]) {
 		a_store(lk, 0);
 		if (lk[1]) __wake(lk, 1, 1);
 	}
+#endif
 }
 
 static inline void lock_bin(int i)
@@ -111,29 +115,19 @@ static int first_set(uint64_t x)
 #endif
 }
 
-static const unsigned char bin_tab[60] = {
-	            32,33,34,35,36,36,37,37,38,38,39,39,
-	40,40,40,40,41,41,41,41,42,42,42,42,43,43,43,43,
-	44,44,44,44,44,44,44,44,45,45,45,45,45,45,45,45,
-	46,46,46,46,46,46,46,46,47,47,47,47,47,47,47,47,
-};
-
 static int bin_index(size_t x)
 {
 	x = x / SIZE_ALIGN - 1;
 	if (x <= 32) return x;
-	if (x < 512) return bin_tab[x/8-4];
 	if (x > 0x1c00) return 63;
-	return bin_tab[x/128-4] + 16;
+	return ((union { float v; uint32_t r; }){(int)x}.r>>21) - 496;
 }
 
 static int bin_index_up(size_t x)
 {
 	x = x / SIZE_ALIGN - 1;
 	if (x <= 32) return x;
-	x--;
-	if (x < 512) return bin_tab[x/8-4] + 1;
-	return bin_tab[x/128-4] + 17;
+	return (((union { float v; uint32_t r; }){(int)x}.r+0x1fffff)>>21) - 496;
 }
 
 #if 0
@@ -326,9 +320,10 @@ void *malloc(size_t n)
 
 	if (n > MMAP_THRESHOLD) {
 		size_t len = n + OVERHEAD + PAGE_SIZE - 1 & -PAGE_SIZE;
-		char *base = __mmap(0, len, PROT_READ|PROT_WRITE,
+		char *base = mmap((void*)__mmap_base, len, PROT_READ|PROT_WRITE,
 			MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
 		if (base == (void *)-1) return 0;
+		__mmap_base += len;
 		c = (void *)(base + SIZE_ALIGN - OVERHEAD);
 		c->csize = len - (SIZE_ALIGN - OVERHEAD);
 		c->psize = SIZE_ALIGN - OVERHEAD;
@@ -390,28 +385,6 @@ void *realloc(void *p, size_t n)
 	self = MEM_TO_CHUNK(p);
 	n1 = n0 = CHUNK_SIZE(self);
 
-	if (IS_MMAPPED(self)) {
-		size_t extra = self->psize;
-		char *base = (char *)self - extra;
-		size_t oldlen = n0 + extra;
-		size_t newlen = n + extra;
-		/* Crash on realloc of freed chunk */
-		if (extra & 1) a_crash();
-		if (newlen < PAGE_SIZE && (new = malloc(n))) {
-			memcpy(new, p, n-OVERHEAD);
-			free(p);
-			return new;
-		}
-		newlen = (newlen + PAGE_SIZE-1) & -PAGE_SIZE;
-		if (oldlen == newlen) return p;
-		base = __mremap(base, oldlen, newlen, MREMAP_MAYMOVE);
-		if (base == (void *)-1)
-			return newlen < oldlen ? p : 0;
-		self = (void *)(base + extra);
-		self->csize = newlen - extra;
-		return CHUNK_TO_MEM(self);
-	}
-
 	next = NEXT_CHUNK(self);
 
 	/* Crash on corrupted footer (likely from buffer overflow) */
@@ -463,7 +436,7 @@ void free(void *p)
 		size_t len = CHUNK_SIZE(self) + extra;
 		/* Crash on double free */
 		if (extra & 1) a_crash();
-		__munmap(base, len);
+		munmap(base, len);
 		return;
 	}
 
@@ -519,12 +492,7 @@ void free(void *p)
 	if (reclaim) {
 		uintptr_t a = (uintptr_t)self + SIZE_ALIGN+PAGE_SIZE-1 & -PAGE_SIZE;
 		uintptr_t b = (uintptr_t)next - SIZE_ALIGN & -PAGE_SIZE;
-#if 1
-		__madvise((void *)a, b-a, MADV_DONTNEED);
-#else
-		__mmap((void *)a, b-a, PROT_READ|PROT_WRITE,
-			MAP_PRIVATE|MAP_ANONYMOUS|MAP_FIXED, -1, 0);
-#endif
+		madvise((void *)a, b-a, MADV_DONTNEED);
 	}
 
 	unlock_bin(i);

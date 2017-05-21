@@ -10,5 +10,3 @@ int ferror(FILE *f)
 	return ret;
 }
 
-weak_alias(ferror, ferror_unlocked);
-weak_alias(ferror, _IO_ferror_unlocked);

@@ -1,6 +1,5 @@
-.global fmodl
-.type fmodl,@function
-fmodl:
+.global _fmodl
+_fmodl:
 	fldt 24(%rsp)
 	fldt 8(%rsp)
 1:	fprem

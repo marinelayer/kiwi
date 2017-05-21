@@ -1,7 +1,5 @@
 .global sigsetjmp
 .global __sigsetjmp
-.type sigsetjmp,@function
-.type __sigsetjmp,@function
 sigsetjmp:
 __sigsetjmp:
 	test %esi,%esi
@@ -11,14 +9,13 @@ __sigsetjmp:
 	mov %rbx,72+8(%rdi)
 	mov %rdi,%rbx
 
-	call setjmp@PLT
+	call setjmp
 
 	pushq 64(%rbx)
 	mov %rbx,%rdi
 	mov %eax,%esi
 	mov 72+8(%rbx),%rbx
 
-.hidden __sigsetjmp_tail
 	jmp __sigsetjmp_tail
 
-1:	jmp setjmp@PLT
+1:	jmp setjmp

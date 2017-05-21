@@ -325,5 +325,3 @@ match_fail:
 	FUNLOCK(f);
 	return matches;
 }
-
-weak_alias(vfwscanf,__isoc99_vfwscanf);

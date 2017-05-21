@@ -8,7 +8,7 @@
 
 void *__expand_heap(size_t *);
 
-static void *__simple_malloc(size_t n)
+void *__simple_malloc(size_t n)
 {
 	static char *cur, *end;
 	static volatile int lock[2];
@@ -45,6 +45,3 @@ static void *__simple_malloc(size_t n)
 	UNLOCK(lock);
 	return p;
 }
-
-weak_alias(__simple_malloc, malloc);
-weak_alias(__simple_malloc, __malloc0);

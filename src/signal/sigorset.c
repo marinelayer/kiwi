@@ -5,8 +5,7 @@
 
 int sigorset(sigset_t *dest, const sigset_t *left, const sigset_t *right)
 {
-	unsigned long i = 0, *d = (void*) dest, *l = (void*) left, *r = (void*) right;
-	for(; i < SST_SIZE; i++) d[i] = l[i] | r[i];
+	dest->__bits[0] = left->__bits[0] | right->__bits[0];
 	return 0;
 }
 

@@ -37,7 +37,3 @@ int fseek(FILE *f, long off, int whence)
 {
 	return __fseeko(f, off, whence);
 }
-
-weak_alias(__fseeko, fseeko);
-
-LFS64(fseeko);

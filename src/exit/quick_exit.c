@@ -1,8 +1,7 @@
 #include <stdlib.h>
 #include "libc.h"
 
-static void dummy() { }
-weak_alias(dummy, __funcs_on_quick_exit);
+extern void __funcs_on_quick_exit(void);
 
 _Noreturn void quick_exit(int code)
 {

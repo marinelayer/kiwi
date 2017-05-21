@@ -7,4 +7,3 @@ double remainder(double x, double y)
 	return remquo(x, y, &q);
 }
 
-weak_alias(remainder, drem);

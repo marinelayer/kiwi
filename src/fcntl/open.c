@@ -1,5 +1,7 @@
 #include <fcntl.h>
 #include <stdarg.h>
+#include <errno.h>
+#include <string.h>
 #include "syscall.h"
 #include "libc.h"
 
@@ -7,18 +9,13 @@ int open(const char *filename, int flags, ...)
 {
 	mode_t mode = 0;
 
-	if ((flags & O_CREAT) || (flags & O_TMPFILE) == O_TMPFILE) {
+	if (flags & O_CREAT) {
 		va_list ap;
 		va_start(ap, flags);
 		mode = va_arg(ap, mode_t);
 		va_end(ap);
 	}
 
-	int fd = __sys_open_cp(filename, flags, mode);
-	if (fd>=0 && (flags & O_CLOEXEC))
-		__syscall(SYS_fcntl, fd, F_SETFD, FD_CLOEXEC);
-
+	int fd = __syscall(SYS_open_nocancel, filename, flags, mode);
 	return __syscall_ret(fd);
 }
-
-LFS64(open);

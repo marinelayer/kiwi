@@ -4,9 +4,8 @@
 #include <locale.h>
 #include <stdlib.h>
 #include "libc.h"
-#include "pthread_impl.h"
 
-#define LOCALE_NAME_MAX 23
+#define LOCALE_NAME_MAX 15
 
 struct __locale_map {
 	const void *map;

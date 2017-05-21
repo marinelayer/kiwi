@@ -31,7 +31,3 @@ long ftell(FILE *f)
 	}
 	return pos;
 }
-
-weak_alias(__ftello, ftello);
-
-LFS64(ftello);

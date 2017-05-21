@@ -1,9 +1,7 @@
 #include "stdio_impl.h"
 
-static FILE *volatile dummy_file = 0;
-weak_alias(dummy_file, __stdin_used);
-weak_alias(dummy_file, __stdout_used);
-weak_alias(dummy_file, __stderr_used);
+extern FILE *volatile __stdin_used;
+extern FILE *volatile __stdout_used;
 
 static void close_file(FILE *f)
 {
@@ -20,5 +18,3 @@ void __stdio_exit(void)
 	close_file(__stdin_used);
 	close_file(__stdout_used);
 }
-
-weak_alias(__stdio_exit, __stdio_exit_needed);

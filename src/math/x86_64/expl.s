@@ -3,13 +3,12 @@
 # exact log2e*x calculation depends on nearest rounding mode
 # using the exact multiplication method of Dekker and Veltkamp
 
-.global expl
-.type expl,@function
-expl:
+.global _expl
+_expl:
 	fldt 8(%rsp)
 
 		# interesting case: 0x1p-32 <= |x| < 16384
-		# check if (exponent|0x8000) is in [0xbfff-32, 0xbfff+13]
+		# check fi (exponent|0x8000) is in [0xbfff-32, 0xbfff+13]
 	mov 16(%rsp), %ax
 	or $0x8000, %ax
 	sub $0xbfdf, %ax
@@ -18,11 +17,11 @@ expl:
 	test %ax, %ax
 	fld1
 	js 1f
-		# if |x|>=0x1p14 or nan return 2^trunc(x)
+		# fi |x|>=0x1p14 or nan return 2^trunc(x)
 	fscale
 	fstp %st(1)
 	ret
-		# if |x|<0x1p-32 return 1+x
+		# fi |x|<0x1p-32 return 1+x
 1:	faddp
 	ret
 
@@ -37,8 +36,8 @@ expl:
 	fstpt (%rsp)
 	fstpt 16(%rsp)
 	fstpt 32(%rsp)
-	call exp2l@PLT
-		# if 2^hi == inf return 2^hi
+	call exp2l
+		# fi 2^hi == inf return 2^hi
 	fld %st(0)
 	fstpt (%rsp)
 	cmpw $0x7fff, 8(%rsp)

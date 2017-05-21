@@ -25,4 +25,3 @@ char *__stpcpy(char *restrict d, const char *restrict s)
 	return d;
 }
 
-weak_alias(__stpcpy, stpcpy);

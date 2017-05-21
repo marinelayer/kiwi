@@ -1,6 +1,5 @@
-.global remainderl
-.type remainderl,@function
-remainderl:
+.global _remainderl
+_remainderl:
 	fldt 24(%rsp)
 	fldt 8(%rsp)
 1:	fprem1

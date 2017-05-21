@@ -54,4 +54,3 @@ int __fpurge(FILE *f)
 	return 0;
 }
 
-weak_alias(__fpurge, fpurge);

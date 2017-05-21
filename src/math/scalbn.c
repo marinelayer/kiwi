@@ -16,13 +16,11 @@ double scalbn(double x, int n)
 				n = 1023;
 		}
 	} else if (n < -1022) {
-		/* make sure final n < -53 to avoid double
-		   rounding in the subnormal range */
-		y *= 0x1p-1022 * 0x1p53;
-		n += 1022 - 53;
+		y *= 0x1p-1022;
+		n += 1022;
 		if (n < -1022) {
-			y *= 0x1p-1022 * 0x1p53;
-			n += 1022 - 53;
+			y *= 0x1p-1022;
+			n += 1022;
 			if (n < -1022)
 				n = -1022;
 		}

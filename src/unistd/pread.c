@@ -4,7 +4,5 @@
 
 ssize_t pread(int fd, void *buf, size_t size, off_t ofs)
 {
-	return syscall_cp(SYS_pread, fd, buf, size, __SYSCALL_LL_PRW(ofs));
+	return syscall(SYS_pread, fd, buf, size, __SYSCALL_LL_O(ofs));
 }
-
-LFS64(pread);
