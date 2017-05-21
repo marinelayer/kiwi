@@ -1,8 +1,7 @@
-.global memcpy
+.global _memcpy
 .global __memcpy_fwd
-.hidden __memcpy_fwd
-.type memcpy,@function
-memcpy:
+#.hidden __memcpy_fwd
+_memcpy:
 __memcpy_fwd:
 	mov %rdi,%rax
 	cmp $8,%rdx

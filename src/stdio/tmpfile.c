@@ -28,5 +28,3 @@ FILE *tmpfile(void)
 	}
 	return 0;
 }
-
-LFS64(tmpfile);

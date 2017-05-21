@@ -21,5 +21,3 @@ double exp10(double x)
 	}
 	return pow(10.0, x);
 }
-
-weak_alias(exp10, pow10);

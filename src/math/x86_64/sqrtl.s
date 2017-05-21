@@ -1,5 +1,4 @@
-.global sqrtl
-.type sqrtl,@function
-sqrtl:	fldt 8(%rsp)
+.global _sqrtl
+_sqrtl:	fldt 8(%rsp)
 	fsqrt
 	ret

@@ -7,9 +7,15 @@
 
 #define UNGET 8
 
+#if 1
+#define FFINALLOCK(f)
+#define FLOCK(f)
+#define FUNLOCK(f)
+#else
 #define FFINALLOCK(f) ((f)->lock>=0 ? __lockfile((f)) : 0)
 #define FLOCK(f) int __need_unlock = ((f)->lock>=0 ? __lockfile((f)) : 0)
 #define FUNLOCK(f) if (__need_unlock) __unlockfile((f)); else
+#endif
 
 #define F_PERM 1
 #define F_NORD 4
@@ -62,7 +68,7 @@ int __toread(FILE *);
 int __towrite(FILE *);
 
 #if defined(__PIC__) && (100*__GNUC__+__GNUC_MINOR__ >= 303)
-__attribute__((visibility("protected")))
+__attribute__((visibility("hidden")))
 #endif
 int __overflow(FILE *, int), __uflow(FILE *);
 

@@ -35,4 +35,3 @@ size_t fwrite(const void *restrict src, size_t size, size_t nmemb, FILE *restric
 	return k==l ? nmemb : k/size;
 }
 
-weak_alias(fwrite, fwrite_unlocked);

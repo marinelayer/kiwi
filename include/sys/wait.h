@@ -32,26 +32,28 @@ pid_t wait3 (int *, int, struct rusage *);
 pid_t wait4 (pid_t, int *, int, struct rusage *);
 #endif
 
-#define WNOHANG    1
-#define WUNTRACED  2
+#define WNOHANG		0x00000001
+#define WUNTRACED	0x00000002
+#define WEXITED         0x00000004
+#define WSTOPPED        0x00000008
+#define WCONTINUED      0x00000010
+#define WNOWAIT         0x00000020
+#define WCOREFLAG       0200
 
-#define WSTOPPED   2
-#define WEXITED    4
-#define WCONTINUED 8
-#define WNOWAIT    0x1000000
 
-#define __WNOTHREAD 0x20000000
-#define __WALL      0x40000000
-#define __WCLONE    0x80000000
-
-#define WEXITSTATUS(s) (((s) & 0xff00) >> 8)
-#define WTERMSIG(s) ((s) & 0x7f)
-#define WSTOPSIG(s) WEXITSTATUS(s)
-#define WCOREDUMP(s) ((s) & 0x80)
-#define WIFEXITED(s) (!WTERMSIG(s))
-#define WIFSTOPPED(s) ((short)((((s)&0xffff)*0x10001)>>8) > 0x7f00)
-#define WIFSIGNALED(s) (((s)&0xffff)-1U < 0xffu)
-#define WIFCONTINUED(s) ((s) == 0xffff)
+#define	_W_INT(i)	(i)
+#define	_WSTATUS(x)	(_W_INT(x) & 0177)
+#define	_WSTOPPED	0177		/* _WSTATUS if process is stopped */
+#define WEXITSTATUS(x)	((_W_INT(x) >> 8) & 0x000000ff)
+#define WSTOPSIG(x)	(_W_INT(x) >> 8)
+#define WIFCONTINUED(x) (_WSTATUS(x) == _WSTOPPED && WSTOPSIG(x) == 0x13)
+#define WIFSTOPPED(x)	(_WSTATUS(x) == _WSTOPPED && WSTOPSIG(x) != 0x13)
+#define WIFEXITED(x)	(_WSTATUS(x) == 0)
+#define WIFSIGNALED(x)	(_WSTATUS(x) != _WSTOPPED && _WSTATUS(x) != 0)
+#define WTERMSIG(x)	(_WSTATUS(x))
+#define WCOREDUMP(x)	(_W_INT(x) & WCOREFLAG)
+#define	W_EXITCODE(ret, sig)	((ret) << 8 | (sig))
+#define	W_STOPCODE(sig)		((sig) << 8 | _WSTOPPED)
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,4 @@
-.global lrintf
-.type lrintf,@function
-lrintf:
+.global _lrintf
+_lrintf:
 	cvtss2si %xmm0,%rax
 	ret

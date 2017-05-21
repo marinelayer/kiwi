@@ -1,6 +1,5 @@
-.global log10l
-.type log10l,@function
-log10l:
+.global _log10l
+_log10l:
 	fldlg2
 	fldt 8(%rsp)
 	fyl2x

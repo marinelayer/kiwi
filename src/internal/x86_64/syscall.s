@@ -1,6 +1,5 @@
 .global __syscall
-.hidden __syscall
-.type __syscall,@function
+#.hidden __syscall
 __syscall:
 	movq %rdi,%rax
 	movq %rsi,%rdi

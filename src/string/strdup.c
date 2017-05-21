@@ -10,4 +10,3 @@ char *__strdup(const char *s)
 	return memcpy(d, s, l+1);
 }
 
-weak_alias(__strdup, strdup);

@@ -2,7 +2,7 @@
 #include "libc.h"
 #include "syscall.h"
 
-int __mprotect(void *addr, size_t len, int prot)
+int mprotect(void *addr, size_t len, int prot)
 {
 	size_t start, end;
 	start = (size_t)addr & -PAGE_SIZE;
@@ -10,4 +10,3 @@ int __mprotect(void *addr, size_t len, int prot)
 	return syscall(SYS_mprotect, start, end-start, prot);
 }
 
-weak_alias(__mprotect, mprotect);

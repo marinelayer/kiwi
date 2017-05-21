@@ -15,4 +15,3 @@ int __strncasecmp_l(const char *l, const char *r, size_t n, locale_t loc)
 	return strncasecmp(l, r, n);
 }
 
-weak_alias(__strncasecmp_l, strncasecmp_l);

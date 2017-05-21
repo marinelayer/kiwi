@@ -7,4 +7,3 @@ float remainderf(float x, float y)
 	return remquof(x, y, &q);
 }
 
-weak_alias(remainderf, dremf);

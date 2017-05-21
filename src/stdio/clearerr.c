@@ -7,4 +7,3 @@ void clearerr(FILE *f)
 	FUNLOCK(f);
 }
 
-weak_alias(clearerr, clearerr_unlocked);

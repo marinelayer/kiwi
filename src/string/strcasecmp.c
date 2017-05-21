@@ -14,4 +14,3 @@ int __strcasecmp_l(const char *l, const char *r, locale_t loc)
 	return strcasecmp(l, r);
 }
 
-weak_alias(__strcasecmp_l, strcasecmp_l);

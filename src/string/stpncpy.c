@@ -27,5 +27,4 @@ tail:
 	return d;
 }
 
-weak_alias(__stpncpy, stpncpy);
 

@@ -9,6 +9,7 @@ size_t wcrtomb(char *restrict s, wchar_t wc, mbstate_t *restrict st)
 	if ((unsigned)wc < 0x80) {
 		*s = wc;
 		return 1;
+#if 0
 	} else if (MB_CUR_MAX == 1) {
 		if (!IS_CODEUNIT(wc)) {
 			errno = EILSEQ;
@@ -16,6 +17,7 @@ size_t wcrtomb(char *restrict s, wchar_t wc, mbstate_t *restrict st)
 		}
 		*s = wc;
 		return 1;
+#endif
 	} else if ((unsigned)wc < 0x800) {
 		*s++ = 0xc0 | (wc>>6);
 		*s = 0x80 | (wc&0x3f);

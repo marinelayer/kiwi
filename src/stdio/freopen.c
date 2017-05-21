@@ -50,5 +50,3 @@ fail:
 	fclose(f);
 	return NULL;
 }
-
-LFS64(freopen);

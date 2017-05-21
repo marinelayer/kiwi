@@ -29,5 +29,3 @@ long double exp10l(long double x)
 	return powl(10.0, x);
 }
 #endif
-
-weak_alias(exp10l, pow10l);

@@ -36,4 +36,3 @@ int vswscanf(const wchar_t *restrict s, const wchar_t *restrict fmt, va_list ap)
 	return vfwscanf(&f, fmt, ap);
 }
 
-weak_alias(vswscanf,__isoc99_vswscanf);

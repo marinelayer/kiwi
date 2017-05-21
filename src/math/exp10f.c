@@ -19,5 +19,3 @@ float exp10f(float x)
 	}
 	return exp2(3.32192809488736234787031942948939 * x);
 }
-
-weak_alias(exp10f, pow10f);

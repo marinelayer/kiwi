@@ -1,6 +1,5 @@
-.global log1pl
-.type log1pl,@function
-log1pl:
+.global _log1pl
+_log1pl:
 	mov 14(%rsp),%eax
 	fldln2
 	and $0x7fffffff,%eax

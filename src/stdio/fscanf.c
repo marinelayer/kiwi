@@ -12,4 +12,3 @@ int fscanf(FILE *restrict f, const char *restrict fmt, ...)
 	return ret;
 }
 
-weak_alias(fscanf, __isoc99_fscanf);
