@@ -6,6 +6,10 @@
 #include "atomic.h"
 #include "libc.h"
 
+extern void __init_ssp(void *p);
+extern uintptr_t __arch_entropy();
+extern uintptr_t __env_entropy(char **envp);
+
 void __init_libc(char **envp, char *pn)
 {
 	size_t i;
@@ -29,6 +33,9 @@ int __libc_start_main(int (*main)(int,char **,char **), int argc, char **argv)
 {
 	char **envp = argv+argc+1;
 
+	uintptr_t entropy = __arch_entropy() ^ __env_entropy(envp);
+
+	__init_ssp((void*)&entropy);
 	__init_libc(envp, argv[0]);
 
 	/* Pass control to the application */
