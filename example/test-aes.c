@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <mach/mach_time.h>
 
 typedef unsigned char u8;
 typedef unsigned int u32;
@@ -1095,7 +1096,9 @@ void aes_encrypt_deinit(void *ctx)
 int main()
 {
 	static const u8 key[16] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
-	static const size_t DATA_SIZE = 32 * 1024 * 1024;
+	static const size_t MiB = 1024 * 1024;
+	static const size_t NS = 1000000000ULL;
+	static const size_t DATA_SIZE = 32 * MiB;
 	
 	u8 *pt1 = malloc(DATA_SIZE);
 	u8 *ct = malloc(DATA_SIZE);
@@ -1108,21 +1111,27 @@ int main()
 	}
 
 	/* encrpyt test pattern */
+	uint64_t t1 = mach_absolute_time();
 	void *rk1 = aes_encrypt_init(key, 16);
 	for (size_t j = 0; j < DATA_SIZE; j += 16) {
 		aes_encrypt((u32*)rk1, pt1 + j, ct + j);
 	}
 	aes_encrypt_deinit(rk1);
+	uint64_t t2 = mach_absolute_time();
+	printf("encrpyted %lu bytes in %luns (%lu MB/sec)\n", DATA_SIZE, (t2-t1), (DATA_SIZE * NS) / ((t2-t1) * MiB));
 
 	/* decrypt test pattern */
+	uint64_t t3 = mach_absolute_time();
 	void *rk2 = aes_decrypt_init(key, 16);
 	for (size_t j = 0; j < DATA_SIZE; j += 16) {
 		aes_decrypt((u32*)rk2, ct + j, pt2 + j);
 	}
 	aes_decrypt_deinit(rk2);
+	uint64_t t4 = mach_absolute_time();
+	printf("decrypted %lu bytes in %luns (%lu MB/sec)\n", DATA_SIZE, (t4-t3), (DATA_SIZE * NS) / ((t4-t3) * MiB));
 
-	/* compare */
-	printf("%d\n", memcmp(pt1, pt2, DATA_SIZE));
+	/* compare result with plaintext */
+	printf("compare: %s\n", memcmp(pt1, pt2, DATA_SIZE) == 0 ? "success" : "failure");
 
 	free(pt1);
 	free(ct);
