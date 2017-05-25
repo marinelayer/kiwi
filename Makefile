@@ -155,6 +155,7 @@ distclean: clean
 EXAMPLES =	bin/example/buffered_io \
 			bin/example/hello_world \
 			bin/example/file_io \
+			bin/example/mach_time \
 			bin/example/signals \
 			bin/example/uname \
 			bin/example/test-aes \
