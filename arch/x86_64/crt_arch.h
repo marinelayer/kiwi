@@ -1,9 +1,17 @@
 __asm__(
+".data \n"
+".align 3 \n"
+"__start_static: \n"
+".quad start \n"
 ".text \n"
+".align 3 \n"
 ".global start \n"
 "start: \n"
 "	xor %rbp,%rbp \n"
 "	mov %rsp,%rdi \n"
 "	andq $-16,%rsp \n"
+"	leaq start(%rip), %rsi \n"
+"	movq %rsi, %rdx \n"
+"	subq __start_static(%rip), %rdx \n"
 "	call __start_c \n"
 );
