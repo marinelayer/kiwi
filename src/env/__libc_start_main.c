@@ -2,6 +2,8 @@
 #include <poll.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <stdlib.h>
+#include <string.h>
 #include "syscall.h"
 #include "atomic.h"
 #include "libc.h"
@@ -30,16 +32,27 @@ void __init_libc(char **envp, char *pn)
 	libc.secure = 1;
 }
 
+uintptr_t __apple_stack_guard(char **applep)
+{
+	uintptr_t entropy = 0;
+	while (*applep != 0) {
+		if (strncmp(*applep, "stack_guard=0x", 14) == 0) {
+			entropy = strtoull(*applep + 14, NULL, 16);
+			return entropy;
+		}
+		applep++;
+	}
+	abort();
+}
+
 int __libc_start_main(int (*main)(int,char **,char **,char **), int argc, char **argv)
 {
 	char **envp = argv+argc+1;
-
 	char **applep = envp;
 	while (*applep != 0) applep++;
 	applep++;
 
-	uintptr_t entropy = __arch_entropy() ^ __env_entropy(envp);
-
+	uintptr_t entropy = __apple_stack_guard(applep);
 	__mmap_base += entropy & 0xffff000;
 
 	__init_ssp((void*)&entropy);
