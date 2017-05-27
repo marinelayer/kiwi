@@ -30,9 +30,13 @@ void __init_libc(char **envp, char *pn)
 	libc.secure = 1;
 }
 
-int __libc_start_main(int (*main)(int,char **,char **), int argc, char **argv)
+int __libc_start_main(int (*main)(int,char **,char **,char **), int argc, char **argv)
 {
 	char **envp = argv+argc+1;
+
+	char **applep = envp;
+	while (*applep != 0) applep++;
+	applep++;
 
 	uintptr_t entropy = __arch_entropy() ^ __env_entropy(envp);
 
@@ -42,6 +46,6 @@ int __libc_start_main(int (*main)(int,char **,char **), int argc, char **argv)
 	__init_libc(envp, argv[0]);
 
 	/* Pass control to the application */
-	exit(main(argc, argv, envp));
+	exit(main(argc, argv, envp, applep));
 	return 0;
 }
