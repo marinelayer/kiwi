@@ -164,7 +164,7 @@ EXAMPLES =	bin/example/buffered_io \
 			bin/example/test-qsort \
 			bin/example/test-sha512
 
-EXAMPLE_LDFLAGS = -pie -static -macosx_version_min 10.12 -pagezero_size 0x1000 -image_base 0x7ffe00000000
+EXAMPLE_LDFLAGS = -pie -static -macosx_version_min 10.12 -pagezero_size 0x1000 -segaddr __TEXT 0x7ffe00000000
 
 FIX_MACHO = bin/tools/fix-macho-zeropage
 

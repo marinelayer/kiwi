@@ -1,6 +1,8 @@
 __asm__(
 ".data \n"
 ".align 3 \n"
+"__image_base: \n"
+".quad segment$start$__TEXT \n"
 "__start_static: \n"
 ".quad start \n"
 ".text \n"
@@ -10,8 +12,8 @@ __asm__(
 "	xor %rbp,%rbp \n"
 "	mov %rsp,%rdi \n"
 "	andq $-16,%rsp \n"
-"	leaq start(%rip), %rsi \n"
-"	movq %rsi, %rdx \n"
+"	movq __image_base(%rip), %rsi \n"
+"	leaq start(%rip), %rdx \n"
 "	subq __start_static(%rip), %rdx \n"
 "	call __start_c \n"
 );

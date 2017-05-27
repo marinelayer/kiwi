@@ -5,8 +5,9 @@
 
 #define VM_PROT_WRITE 0x02
 
-void __rebase_macho(struct mach_header_64* mh, intptr_t slide)
+void __rebase_macho(uintptr_t image_base, intptr_t slide)
 {
+	struct mach_header_64* mh = (struct mach_header_64*)(image_base + slide);
 	size_t cmd_count = mh->ncmds;
 	struct load_command* cmds = (struct load_command*)(((char*)mh) + sizeof(*mh));
 	struct load_command* cmd = cmds;
