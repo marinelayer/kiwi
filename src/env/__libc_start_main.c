@@ -53,7 +53,7 @@ int __libc_start_main(int (*main)(int,char **,char **,char **), int argc, char *
 	applep++;
 
 	uintptr_t entropy = __apple_stack_guard(applep);
-	__mmap_base += entropy & 0xffff000;
+	__mmap_base += __arch_entropy() & 0xffff000;
 
 	__init_ssp((void*)&entropy);
 	__init_libc(envp, argv[0]);
