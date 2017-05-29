@@ -3,10 +3,8 @@
 #
 
 srcdir = .
-exec_prefix = /usr/local
-bindir = $(exec_prefix)/bin
 
-prefix = /usr/local/kiwi
+prefix = /usr
 includedir = $(prefix)/include
 libdir = $(prefix)/lib
 
@@ -36,7 +34,7 @@ LIBCC = -lgcc
 CPPFLAGS =
 CFLAGS = -Wall -Wpointer-arith -Wno-cast-align -Wno-parentheses -Wno-char-subscripts -Wno-uninitialized -Wno-sequence-point -Wno-missing-braces -Wno-unused-value -Wno-unused-function -Wno-overflow -Wno-int-to-pointer-cast
 CFLAGS_AUTO = -Os -fpie -pipe
-CFLAGS_C99FSE = -std=c99 -ffreestanding -nostdinc 
+CFLAGS_C99FSE = -std=c99 -ffreestanding -nostdinc
 
 CFLAGS_ALL = $(CFLAGS_C99FSE)
 CFLAGS_ALL += -D_XOPEN_SOURCE=700 -I$(srcdir)/arch/$(ARCH) -Iobj/src/internal -I$(srcdir)/src/internal -Iobj/include -I$(srcdir)/include
