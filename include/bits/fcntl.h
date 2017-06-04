@@ -3,6 +3,7 @@
 #define	O_SHLOCK	0x0010
 #define	O_EXLOCK	0x0020
 #define	O_ASYNC		0x0040
+#define	O_SYNC		0x0080
 #define	O_FSYNC		O_SYNC
 #define O_NOFOLLOW  0x0100
 #define	O_CREAT		0x0200
