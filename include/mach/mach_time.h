@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#undef KERN_SUCCESS
+#define KERN_SUCCESS 0
+
 #ifdef __cplusplus
 extern "C" {
 #endif
