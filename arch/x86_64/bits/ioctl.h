@@ -1,12 +1,13 @@
-#define _IOC(a,b,c,d) ( ((a)<<30) | ((b)<<8) | (c) | ((d)<<16) )
-#define _IOC_NONE  0U
-#define _IOC_WRITE 1U
-#define _IOC_READ  2U
+#define IOCPARM_MASK    0x1fff
+#define IOC_OUT         0x40000000
+#define IOC_IN          0x80000000
+#define IOC_INOUT       (IOC_IN|IOC_OUT)
 
-#define _IO(a,b) _IOC(_IOC_NONE,(a),(b),0)
-#define _IOW(a,b,c) _IOC(_IOC_WRITE,(a),(b),sizeof(c))
-#define _IOR(a,b,c) _IOC(_IOC_READ,(a),(b),sizeof(c))
-#define _IOWR(a,b,c) _IOC(_IOC_READ|_IOC_WRITE,(a),(b),sizeof(c))
+#define _IOC(inout,group,num,len) (inout | ((len & IOCPARM_MASK) << 16) | ((group) << 8) | (num))
+#define _IO(g,n)        _IOC(IOC_VOID,  (g), (n), 0)
+#define _IOR(g,n,t)     _IOC(IOC_OUT,   (g), (n), sizeof(t))
+#define _IOW(g,n,t)     _IOC(IOC_IN,    (g), (n), sizeof(t))
+#define _IOWR(g,n,t)    _IOC(IOC_INOUT, (g), (n), sizeof(t))
 
 struct winsize {
 	unsigned short  ws_row;

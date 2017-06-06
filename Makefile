@@ -152,15 +152,16 @@ distclean: clean
 # examples
 
 EXAMPLES =	bin/example/buffered_io \
-			bin/example/hello_world \
 			bin/example/file_io \
+			bin/example/hello_world \
 			bin/example/mach_time \
 			bin/example/signals \
-			bin/example/uname \
+			bin/example/terminal \
 			bin/example/test-aes \
 			bin/example/test-primes \
 			bin/example/test-qsort \
-			bin/example/test-sha512
+			bin/example/test-sha512 \
+			bin/example/uname
 
 EXAMPLE_LDFLAGS = -pie -static -macosx_version_min 10.12 -pagezero_size 0x1000 -segaddr __TEXT 0x7ffe00000000
 
