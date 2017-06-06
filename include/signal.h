@@ -139,10 +139,8 @@ void (*sigset(int, void (*)(int)))(int);
 typedef void (*sig_t)(int);
 #endif
 
-__attribute__ ((always_inline)) static int __sigbits(int __signo)
-{
-    return __signo > _NSIG ? 0 : (1 << (__signo - 1));
-}
+#define __sigbits(__signo) \
+    (__signo > _NSIG ? 0 : (1 << (__signo - 1)))
 
 #ifdef _GNU_SOURCE
 typedef void (*sighandler_t)(int);
