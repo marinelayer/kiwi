@@ -2,7 +2,7 @@ __asm__(
 ".data \n"
 ".align 3 \n"
 "__image_base: \n"
-".quad segment$start$__TEXT \n"
+".quad __mh_execute_header \n"
 "__start_static: \n"
 ".quad start \n"
 ".text \n"
